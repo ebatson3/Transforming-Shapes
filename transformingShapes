@@ -1,0 +1,188 @@
+class Shape {
+    constructor(newX, newY) {
+        // In this constructor, __x and __y are private variables (in shape class)
+        let __x;
+        let __y;
+        //The setter functions for x and y are to make sure that the values are not negative
+        //The getter functions return the values from setter
+        this.setX = function (x) {
+            __x = (x > 0) ? x : 0;
+        };
+        this.getX = function () {
+            return __x;
+        };
+        this.setY = function (y) {
+            __y = (y > 0) ? y : 0;
+        };
+        this.getY = function () {
+            return __y;
+        };
+        //Now we need to pass the input values to the setter functions
+        this.setX(newX);
+        this.setY(newY);
+    }
+    //Returns the results
+    displayInfo(){
+        return "Shape with main points: " + this.getX() + ", " + this.getY();
+    }
+
+    //Prints the results to the user
+    showPoint() {
+        console.log(this.getX() + " , " + this.getY());
+    }
+
+
+    //This is the method that creates the offset needed to make different shapes
+    createHorizontalOffset(offset) {
+        var space = "";
+        //Making sure offset is valid input
+        if (offset < 0 || offset == undefined)
+            offset = this.getX();
+        //Returns this value as a string
+        for (var i = 0 ; i < offset ; i++)
+            space += " ";
+        return space;
+    }
+
+    //This method creates the vertical offset needed to make different shapes
+    draw() {
+        for (var i = 1 ; i < this.__y__ ; i++)
+            console.log(""); //Printing string to console
+    }
+}
+
+//Square class
+class Square extends Shape {
+
+    constructor(newX, newY, newLength) {
+
+        super(newX, newY)
+        let __length;
+        this.setLength = function(length){
+            __length = (length > 0) ? length : 0;
+        }
+        this.getLength = function(){
+            return __length;
+        }
+        this.setLength(newLength);
+    }
+
+    //This overrides the shape draw method
+    draw(offset) {
+        //We need to call parent class
+        super.draw();
+        var line;
+        //Making string to print
+        for (var i = 0 ; i < this.length; i++) {
+            // Offset input + x-value offset
+            line = "" + this.createHorizontalOffset(offset) + this.createHorizontalOffset();
+            for (var j = 0; j < this.length; j++)
+                line += " * ";
+            console.log(line);
+        }
+    }
+    displayInfo(){ //Returning the supered information
+        return "Square" + super.displayInfo()
+    }
+}
+
+//Triangle class
+class Triangle extends Shape {
+    constructor(x, y, height) {
+        super(x, y);
+        this.setHeight(height);
+    }
+
+    setHeight(height) {
+        // We need to make sure that the height is valid
+        if (height > 0)
+            this.__height__ = height;
+        else
+            this.__height__ = 1;
+    }
+
+    //We need to override parent draw method
+    draw(offset) {
+        //calling parent class
+        super.draw();
+        var line;
+        //creating string to print
+        for (var i = 0 ; i < this.__height__ ; i++) {
+            // Offset input + x-value offset
+            line = "" + this.createHorizontalOffset(offset) + this.createHorizontalOffset();
+            for (var j = 0 ; j <= i ; j++)
+                line += " * ";
+            console.log(line);
+        }
+    }
+
+    displayInfo(){ //Returning the supered information
+        return "Triangle" + super.displayInfo()
+    }
+}
+
+//Creating a new square object called 's'
+//Then calling draw and showPoint method to print results
+let s = new Square(3, 4, 5);
+s.draw(4);
+s.showPoint();
+
+//Creating a new triangle object called 't'
+let t = new Triangle(5,6,7);
+t.draw(1);
+t.showPoint();
+
+//TASK 2
+
+//Given
+let plainObjects = [
+    {x:5,y:6},
+    {type:'Square', x:7,y:10, length:10},
+    {x:8,y:9,type:'Triangle', height:50},
+];
+
+
+//This method takes the above array as an input
+let transformPlainObjectsToShapes = function(data){
+    let shapes = []; //array
+    let s;
+    //To get the new array of shapes, we need to iterate through each member and find shapes
+    for(let d of data){
+        switch(d.type){ //Switch statement for different types of shapes
+            case undefined:
+                s = new Shape(d.x, d.y);
+                break;
+
+            case 'Square':
+                s = new Square(d.x, d.y)
+                break;
+            case 'Triangle':
+                s = new Triangle(d.x, d.y)
+        }
+        //Push method used to add each new shape to array
+        shapes.push(s);
+    }
+    return shapes; //returning new array
+}
+
+//Passing plainObjects to method
+let results = transformPlainObjectsToShapes(plainObjects);
+
+for(let s of results){
+    console.log(s.displayInfo());
+}
+
+//TASK 3
+
+//Using map to do same thing as in task 2
+//.map() will find the shapes within array
+results = plainObjects.map(object => (object.type === undefined)? new Shape(object.x, object.y):
+    (object.type === 'Square')? new Square(object.x, object.y, object.length):
+        new Triangle(object.x, object.y, object.height))
+
+for(let s of results){
+    console.log(s.displayInfo()) //Prints it
+}
+
+
+//End
